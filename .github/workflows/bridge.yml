@@ -84,6 +84,11 @@ jobs:
       - name: Install package
         run: pip install -e carsus/
 
+      - name: List cloned repository contents
+        run: |
+          echo "List of folders and their paths:"
+          find cloned-repo-carsus-data-kurucz -type d
+
       - name: Run notebooks
         run: |
           jupyter nbconvert ${{ env.NBCONVERT_FLAGS }} carsus/docs/tardis_atomdata_ref.ipynb
