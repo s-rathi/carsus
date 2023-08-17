@@ -24,12 +24,18 @@ jobs:
           path: cloned-repo-carsus-data-cmfgen
           key: ${{ runner.os }}-cache-${{ hashFiles('cloned-repo-carsus-data-cmfgen/**/*') }}
         id: cmfgen-cache
-          
+
+      - name: clone
         run: | 
           git clone https://github.com/tardis-sn/carsus-data-cmfgen cloned-repo-carsus-data-cmfgen
         if: steps.cmfgen-cache.outputs.cache-hit != 'true'
         
-
+      - name: update
+        run: |
+          cd cloned-repo-carsus-data-cmfgen
+          git fetch origin
+          git checkout origin/main
+        
       - name: Cache Cloned carsus-data-kurucz
         uses: actions/cache@v3
         with:
