@@ -207,7 +207,7 @@ class NISTWeightsComp(BaseParser):
     base : pandas.DataFrame
     version : str
     """
-    def __init__(self, atoms='H-P', fname=None, , nist_database):
+    def __init__(self, atoms='H-P', fname=None, nist_database):
         #input_data = download_weightscomp()
         #if fname is None:
          #    input_data = self.download_weightscomp()
