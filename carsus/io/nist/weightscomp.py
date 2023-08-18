@@ -207,17 +207,8 @@ class NISTWeightsComp(BaseParser):
     base : pandas.DataFrame
     version : str
     """
-    def __init__(self, atoms='H-P', fname=None, nist_database):
-        #input_data = download_weightscomp()
-        #if fname is None:
-         #    input_data = self.download_weightscomp()
-        #else: 
-        if fname is None:
-            input_data = download_weightscomp()
-        else:
-           # print("Using data from carsus-data-nist repo:")
-            input_data = self._read_data_from_data_repo(fname)
-
+    def __init__(self, atoms='H-Pu', nist_database=False):
+        input_data = download_weightscomp()
         self.parser = NISTWeightsCompPyparser(input_data=input_data)
         self._prepare_data(atoms)
         self._get_version()
