@@ -126,71 +126,6 @@ class NISTWeightsCompPyparser(BasePyparser):
         """ Returns a new dataframe created from `base` and containing data *only* related to isotopes """
         pass
 
-
-class NISTWeightsCompIngester(BaseIngester):
-    """
-    Class for ingesters for the NIST Atomic Weights and Isotopic Compositions database
-
-    Attributes
-    ----------
-    session: SQLAlchemy session
-
-    data_source: DataSource instance
-        The data source of the ingester
-
-    parser : BaseParser instance
-        (default value = NISTWeightsCompPyparser())
-
-    downloader : function
-        (default value = download_weightscomp)
-
-    Methods
-    -------
-    download()
-        Downloads the data with the 'downloader' and loads the `parser` with it
-
-    ingest(session)
-        Persists the downloaded data into the database
-
-    """
-
-    def __init__(self, session, ds_short_name="nist", parser=None, downloader=None):
-        if parser is None:
-            parser = NISTWeightsCompPyparser()
-        if downloader is None:
-            downloader = download_weightscomp
-        super(NISTWeightsCompIngester, self).\
-            __init__(session, ds_short_name, parser=parser, downloader=downloader)
-
-    def download(self):
-        data = self.downloader()
-        self.parser(data)
-
-    def ingest_atomic_weights(self, atomic_weights=None):
-
-        if atomic_weights is None:
-            atomic_weights = self.parser.prepare_atomic_dataframe()
-
-        logger.info("Ingesting atomic weights from `{}`.".format(self.data_source.short_name))
-
-        for atomic_number, row in atomic_weights.iterrows():
-            weight = AtomWeight(atomic_number=atomic_number,
-                                     data_source=self.data_source,
-                                     quantity=row[AW_VAL_COL] * u.u,
-                                     uncert=row[AW_SD_COL])
-            self.session.add(weight)
-
-    def ingest(self, atomic_weights=True):
-        """ *Only* ingests atomic weights *for now* """
-
-        if self.parser.base is None:
-            self.download()
-
-        if atomic_weights:
-            self.ingest_atomic_weights()
-            self.session.flush()
-
-
 class NISTWeightsComp(BaseParser):
     """
     Attributes
@@ -198,11 +133,25 @@ class NISTWeightsComp(BaseParser):
     base : pandas.DataFrame
     version : str
     """
-    def __init__(self, atoms='H-Pu'):
-        input_data = download_weightscomp()
+    def __init__(self, atoms='H-P', fname=None):
+        #input_data = download_weightscomp()
+        #if fname is None:
+         #    input_data = self.download_weightscomp()
+        #else: 
+        if fname is None:
+            input_data = download_weightscomp()
+        else:
+           # print("Using data from carsus-data-nist repo:")
+            input_data = self._read_data_from_data_repo(fname)
+            
         self.parser = NISTWeightsCompPyparser(input_data=input_data)
         self._prepare_data(atoms)
         self._get_version()
+
+    def _read_data_from_data_repo(self, fname):
+        with open(fname, 'r') as file:
+            data = file.read()
+        return data
 
     def _prepare_data(self, atoms):
         atomic_numbers = parse_selected_atoms(atoms)
