@@ -313,11 +313,23 @@ class NISTIonizationEnergies(BaseParser):
     base : pandas.Series
     version : str
     """
-    def __init__(self, spectra):
-        input_data = download_ionization_energies(spectra)
+    def __init__(self, spectra, fname=None):
+        if fname is None:
+            input_data = download_ionization_energies()
+        else:
+           # print("Using data from carsus-data-nist repo:")
+            input_data = self._read_data_from_data_repo(fname)
+        #input_data = download_ionization_energies(spectra)
         self.parser = NISTIonizationEnergiesParser(input_data)
-        self._prepare_data()
+        self._prepare_data(spectra)
         self._get_version()
+
+
+    def _read_data_from_data_repo(self, fname):
+        # Read the data from the file and return it
+        with open(fname, 'r') as file:
+            data = file.read()
+        return data    
 
 
     def _prepare_data(self):
