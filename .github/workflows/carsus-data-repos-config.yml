@@ -57,7 +57,7 @@ jobs:
 
       - name: Clone Repo carsus-data-nist
         run: |
-          git clone https://github.com/tardis-sn/carsus-data-nist cloned-repo-carsus-data-nist
+          git clone https://github.com/s-rathi/carsus-data-nist cloned-repo-carsus-data-nist
         if: steps.nist-cache.outputs.cache-hit != 'true'
         
       - name: Setup carsus environment
