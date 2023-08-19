@@ -75,7 +75,11 @@ jobs:
 
       - run: |
           echo "Cloned Repository Path: $PWD/cloned-repo-carsus-data-cmfgen"
-          cd ../cloned-repo-carsus-data-cmfgen/atomic/HYD/I
+          echo "Cloned Repository Path: $PWD/cloned-repo-carsus-data-nist"
+          echo "Cloned Repository Path: $PWD/cloned-repo-carsus-data-kurucz"
+          current_dir = "${GITHUB_WORKSPACE}"
+          echo "curent: $current_dir"
+          cd ../../cloned-repo-carsus-data-cmfgen/atomic/HYD/I
           ls
           
       - name: Run notebooks
