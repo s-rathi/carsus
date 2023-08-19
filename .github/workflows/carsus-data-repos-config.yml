@@ -56,7 +56,11 @@ jobs:
   carsus-build:
     needs: [process-data-repo]
     runs-on: ubuntu-latest
-    steps:      
+    steps:
+      - uses: actions/checkout@v3
+        with:
+        path: carsus/      
+        
       - name: Setup carsus environment
         uses: conda-incubator/setup-miniconda@v2
         with:
