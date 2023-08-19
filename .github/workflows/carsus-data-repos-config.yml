@@ -74,7 +74,8 @@ jobs:
         run: pip install -e carsus/
 
       - run: |
-          cd cloned-repo-carsus-data-cmfgen/atomic/HYD/I
+          echo "Cloned Repository Path: $PWD/cloned-repo-carsus-data-cmfgen"
+          cd ../cloned-repo-carsus-data-cmfgen/atomic/HYD/I
           ls
           
       - name: Run notebooks
