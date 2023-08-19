@@ -54,6 +54,18 @@ jobs:
           git clone https://github.com/tardis-sn/carsus-data-kurucz cloned-repo-carsus-data-kurucz
         if: steps.kurucz-cache.outputs.cache-hit != 'true'
 
+      - name: Check for changes and update
+        if: steps.kurucz-cache.outputs.cache-hit == 'true'  # Update only if the repository was cloned
+        run: |
+          cd cloned-repo-carsus-data-kurucz
+          git fetch
+          if git diff origin/main --exit-code; then
+            echo "No changes found. Using existing clone."
+          else
+            git checkout origin/main
+            echo "Repository updated. Checked out latest changes."
+          fi
+
       - name: Cache Cloned carsus-data-nist
         uses: actions/cache@v3
         with:
@@ -65,6 +77,18 @@ jobs:
         run: |
           git clone https://github.com/s-rathi/carsus-data-nist cloned-repo-carsus-data-nist
         if: steps.nist-cache.outputs.cache-hit != 'true'
+
+      - name: Check for changes and update
+        if: steps.nist-cache.outputs.cache-hit == 'true'  # Update only if the repository was cloned
+        run: |
+          cd cloned-repo-carsus-data-nist
+          git fetch
+          if git diff origin/main --exit-code; then
+            echo "No changes found. Using existing clone."
+          else
+            git checkout origin/main
+            echo "Repository updated. Checked out latest changes."
+          fi
         
       - name: Setup carsus environment
         uses: conda-incubator/setup-miniconda@v2
