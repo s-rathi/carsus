@@ -39,6 +39,7 @@ jobs:
       - run: |
           repo_path="cloned-repo-${{ matrix.repo }}"
           if [ ! -d $repo_path ]] ; then
+            echo "Cloning repository ${{ matrix.repo }}..."
             git clone https://github.com/s-rathi/${{ matrix.repo }} $repo_path
           fi
 
@@ -52,7 +53,7 @@ jobs:
             git checkout origin/main
             echo "Repository updated. Checked out latest changes."
           fi
-  build:
+  carsus-build:
     needs: [process-data-repo]
     runs-on: ubuntu-latest
     steps:      
@@ -61,7 +62,7 @@ jobs:
         with:
             miniforge-variant: Mambaforge
             miniforge-version: latest
-            environment-file: carsus/carsus_env3.yml
+            environment-file: carsus_env3.yml
             activate-environment: carsus
             use-mamba: true
 
