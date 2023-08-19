@@ -24,9 +24,8 @@ logger = logging.getLogger(__name__)
 WEIGHTSCOMP_URL = "http://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl"
 WEIGHTSCOMP_VERSION_URL = "https://www.nist.gov/pml/atomic-weights-and-isotopic-compositions-version-history"
 
-carsus_data_nist_weights = "https://raw.githubusercontent.com/s-rathi/carsus-data-nist/main/html_files/weights.html"
 
-def download_weightscomp(ascii='ascii2', isotype='some', nist_database=False):
+def download_weightscomp(ascii='ascii2', isotype='some'):
     """
     Downloader function for the NIST Atomic Weights and Isotopic Compositions database
 
@@ -40,27 +39,19 @@ def download_weightscomp(ascii='ascii2', isotype='some', nist_database=False):
     isotype: str
         GET request parameter, refer to the NIST docs
         (default: 'some')
-    nist_database: bool
-        If True, download from NIST database URL; if False, read from carsus-data-nist repository
 
     Returns
     -------
     str
         Preformatted text data
-    """
 
-    if nist_database:
-        logger.info("Downloading data from the NIST Atomic Weights and Isotopic Compositions Database.")
-        r = requests.get(WEIGHTSCOMP_URL, params={'ascii': ascii, 'isotype': isotype})
-        soup = BeautifulSoup(r.text, 'html5lib')
-        pre_text_data = soup.pre.get_text()
-        pre_text_data = pre_text_data.replace(u'\xa0', u' ')  # replace non-breaking spaces with spaces
-        return pre_text_data
-    else:
-        logger.info("Downloading data from the carsus-dat-nist repository")
-        response = requests.get(carsus_data_nist_weights, verify=False)
-        data = response.text
-        return data
+    """
+    logger.info("Downloading data from the NIST Atomic Weights and Isotopic Compositions Database.")
+    r = retry_request(url=WEIGHTSCOMP_URL, method="get", params={'ascii': ascii, 'isotype': isotype})
+    soup = BeautifulSoup(r.text, 'html5lib')
+    pre_text_data = soup.pre.get_text()
+    pre_text_data = pre_text_data.replace(u'\xa0', u' ')  # replace non-breaking spaces with spaces
+    return pre_text_data
 
 
 class NISTWeightsCompPyparser(BasePyparser):
@@ -207,16 +198,11 @@ class NISTWeightsComp(BaseParser):
     base : pandas.DataFrame
     version : str
     """
-    def __init__(self, atoms='H-Pu', nist_database=False):
+    def __init__(self, atoms='H-Pu'):
         input_data = download_weightscomp()
         self.parser = NISTWeightsCompPyparser(input_data=input_data)
         self._prepare_data(atoms)
         self._get_version()
-
-    def _read_data_from_data_repo(self, fname):
-        with open(fname, 'r') as file:
-            data = file.read()
-        return data
 
     def _prepare_data(self, atoms):
         atomic_numbers = parse_selected_atoms(atoms)
