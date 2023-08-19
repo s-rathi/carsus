@@ -25,7 +25,7 @@ WEIGHTSCOMP_URL = "http://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl"
 WEIGHTSCOMP_VERSION_URL = "https://www.nist.gov/pml/atomic-weights-and-isotopic-compositions-version-history"
 carsus_data_nist_weights = "https://raw.githubusercontent.com/s-rathi/carsus-data-nist/main/html_files/weights.html"
 
-def download_weightscomp(url, ascii='ascii2', isotype='some'):
+def download_weightscomp(nist_url, ascii='ascii2', isotype='some'):
     """
     Downloader function for the NIST Atomic Weights and Isotopic Compositions database
 
@@ -50,12 +50,12 @@ def download_weightscomp(url, ascii='ascii2', isotype='some'):
 
     """
 
-    if url is False or url is None:
+    if nist_url is False:
             logger.info("Downloading data from the carsus-dat-nist repository")
             response = requests.get(carsus_data_nist_weights, verify=False)
             data = response.text
             return data
-    elif url is True: 
+    elif nist_url is True: 
             logger.info("Downloading data from the NIST Atomic Weights and Isotopic Compositions Database.")
             r = retry_request(WEIGHTSCOMP_URL, method="get", params={'ascii': ascii, 'isotype': isotype})
             soup = BeautifulSoup(r.text, 'html5lib')
@@ -209,8 +209,8 @@ class NISTWeightsComp(BaseParser):
     version : str
     """
 
-    def __init__(self, atoms, url):
-        input_data =  download_weightscomp(url)
+    def __init__(self,atoms='H-Pu', nist_url=False ):
+        input_data =  download_weightscomp(nist_url)
         self.parser = NISTWeightsCompPyparser(input_data=input_data)
         self._prepare_data(atoms)
         self._get_version()
