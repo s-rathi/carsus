@@ -59,8 +59,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-        path: carsus/      
-        
+         path: carsus/      
+
       - name: Setup carsus environment
         uses: conda-incubator/setup-miniconda@v2
         with:
