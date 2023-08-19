@@ -11,7 +11,7 @@ defaults:
         shell: bash -l {0}
 
 jobs:
-  carsus-checkout:
+  checkout:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -34,7 +34,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: cloned-repo-${{ matrix.repo }}
-          key: ${{ runner.os }}-cache-${{ hashFiles ('cloned-repo-${{ matrix.repo }}/**/*.lock') }}
+          key: ${{ runner.os }}-cache-${{ hashFiles('cloned-repo-${{ matrix.repo }}/**/*.lock') }}
         
       - run: |
           repo_path="cloned-repo-${{ matrix.repo }}"
@@ -66,7 +66,7 @@ jobs:
         with:
             miniforge-variant: Mambaforge
             miniforge-version: latest
-            environment-file: carsus_env3.yml
+            environment-file: carsus/carsus_env3.yml
             activate-environment: carsus
             use-mamba: true
 
