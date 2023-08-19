@@ -77,7 +77,7 @@ jobs:
           echo "Cloned Repository Path: $PWD/cloned-repo-carsus-data-cmfgen"
           echo "Cloned Repository Path: $PWD/cloned-repo-carsus-data-nist"
           echo "Cloned Repository Path: $PWD/cloned-repo-carsus-data-kurucz"
-          current_dir = "${GITHUB_WORKSPACE}"
+          current_dir="${PWD}"
           echo "curent: $current_dir"
           cd ../../cloned-repo-carsus-data-cmfgen/atomic/HYD/I
           ls
