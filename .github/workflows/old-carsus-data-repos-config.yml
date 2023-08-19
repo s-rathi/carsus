@@ -1,4 +1,4 @@
-name: carsus-data-repos-config
+name: repo-cofig
 
 on: 
   workflow_dispatch: 
