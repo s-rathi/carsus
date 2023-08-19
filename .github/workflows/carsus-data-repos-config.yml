@@ -19,22 +19,27 @@ jobs:
           path: carsus/
                       
       - name: Cache carsus-data-cmfgen
+        id: cmfgen-cache
         uses: actions/cache@v3
         with:
           path: cloned-repo-carsus-data-cmfgen
-          key: ${{ runner.os }}-cache-${{ hashFiles('cloned-repo-carsus-data-cmfgen/**/*') }}
-        id: cmfgen-cache
-
-      - name: clone
-        run: | 
-          git clone https://github.com/tardis-sn/carsus-data-cmfgen cloned-repo-carsus-data-cmfgen
-        if: steps.cmfgen-cache.outputs.cache-hit != 'true'
+          key: ${{ runner.os }}-cache-${{ hashFiles('cloned-repo-carsus-data-cmfgen/**/*.lock') }}
         
-      - name: update
+      - name: clone
+        run: |
+            git clone https://github.com/username/another-repo.git cloned-repo-carsus-data-cmfgen
+        if: steps.cmfgen-cache.outputs.cache-hit != 'true'
+
+      - name: Check for changes and update
+        if: steps.cmfgen-cache.outputs.cache-hit == 'true'  # Update only if the repository was cloned
         run: |
           cd cloned-repo-carsus-data-cmfgen
-          git fetch origin
-          git checkout origin/main
+          git fetch
+          if git diff origin/main --exit-code; then
+            echo "No changes found. Using existing clone."
+          else
+            git checkout origin/main
+            echo "Repository updated. Checked out latest changes."
         
       - name: Cache Cloned carsus-data-kurucz
         uses: actions/cache@v3
