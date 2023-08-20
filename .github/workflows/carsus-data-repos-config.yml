@@ -42,7 +42,7 @@ jobs:
         
       - run: |
           for repo in carsus-data-cmfgen carsus-data-kurucz carsus-data-nist; do
-            repo_path="carsus/cloned-repos/$repo"
+            repo_path="cloned-repos-$repo"
 
             if [ ! -d $repo_path ]] ; then
               echo "Cloning repository $repo..."
