@@ -36,6 +36,9 @@ jobs:
         with:
           path: cloned-repo-${{ matrix.repo }}
           key: ${{ runner.os }}-cache-${{ hashFiles('cloned-repo-${{ matrix.repo }}/**/*.lock') }}
+
+      - run: |
+          ls
         
       - run: |
           repo_path="cloned-repo-${{ matrix.repo }}"
