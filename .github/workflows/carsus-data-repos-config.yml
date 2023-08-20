@@ -20,6 +20,7 @@ jobs:
 
 
   process-data-repo:
+    needs: checkout
     runs-on: ubuntu-latest
     strategy:
       matrix:
