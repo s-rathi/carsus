@@ -82,6 +82,9 @@ jobs:
           ls
           cd carsus/
           ls
+          cd cloned-repo-carsus-data-nist
+          echo "cloned-repo-carsus-data-nist"
+          ls
           
       - name: Run notebooks
         run: |
