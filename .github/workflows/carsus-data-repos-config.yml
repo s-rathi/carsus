@@ -20,6 +20,7 @@ jobs:
 
 
   process-data-repo:
+    needs: [checkout]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -82,7 +83,7 @@ jobs:
           ls
           cd carsus/
           ls
-          cd cloned-repo-carsus-data-nist
+          cd ../../cloned-repo-carsus-data-nist
           echo "cloned-repo-carsus-data-nist"
           ls
           
