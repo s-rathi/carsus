@@ -78,6 +78,8 @@ jobs:
           echo "curent: $current_dir"
           #cd cloned-repo-carsus-data-cmfgen/atomic/HYD/I
           ls
+          cd carsus/
+          ls
           
       - name: Run notebooks
         run: |
