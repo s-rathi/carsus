@@ -1,4 +1,4 @@
-name: carsus-data-repos-config
+name: matrix-carsus-data-repos-config
 
 on: 
   workflow_dispatch: 
@@ -18,49 +18,54 @@ jobs:
         with:
           path: carsus/
 
-      - name: Restore cache
-        uses: actions/cache@v3
-        with:
-          path: cloned-repo-carsus-data-cmfgen
-          key: ${{ runner.os }}-cache-${{ hashFiles('cloned-repo-carsus-data-cmfgen/**/*.lock') }}
+
+  process-data-repo:
+    needs: [checkout]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        repo: [carsus-data-cmfgen, carsus-data-kurucz, carsus-data-nist]
+    steps:
+    #  - name: Checkout Repository
+    #    uses: actions/checkout@v2
+    #    with:
+    #      path: cloned-repo-${{ matrix.repo }}
 
       - name: Restore cache
         uses: actions/cache@v3
         with:
-          path: cloned-repo-carsus-data-kurucz
-          key: ${{ runner.os }}-cache-${{ hashFiles('cloned-repo-carsus-data-kurucz/**/*.lock') }}
-
-      - name: Restore cache
-        uses: actions/cache@v3
-        with:
-          path: cloned-repo-carsus-data-nist
-          key: ${{ runner.os }}-cache-${{ hashFiles('cloned-repo-carsus-data-nist/**/*.lock') }}
-
+          path: cloned-repo-${{ matrix.repo }}
+          key: ${{ runner.os }}-cache-${{ hashFiles('cloned-repo-${{ matrix.repo }}/**/*.lock') }}
 
       - run: |
           ls
         
       - run: |
-          for repo in carsus-data-cmfgen carsus-data-kurucz carsus-data-nist; do
-            repo_path="carsus/cloned-repos/$repo"
+          repo_path="cloned-repo-${{ matrix.repo }}"
+          if [ ! -d $repo_path ]] ; then
+            echo "Cloning repository ${{ matrix.repo }}..."
+            git clone https://github.com/s-rathi/${{ matrix.repo }} $repo_path
+          fi
 
-            if [ ! -d $repo_path ]] ; then
-              echo "Cloning repository $repo..."
-              git clone https://github.com/s-rathi/$repo $repo_path
-            fi
-
-            # check for changes and update
-            cd $repo_path
-            git fetch
-            if git diff origin/main --exit-code; then
-              echo "No changes found for $repo. Using existing clone."
-            else
-              git checkout origin/main
-              echo "Repository $repo updated. Checked out latest changes."
-            fi
-          done
+          # chcek for changes an update
+          
+          cd cloned-repo-${{ matrix.repo }}
+          git fetch
+          if git diff origin/main --exit-code; then
+            echo "No changes found. Using existing clone."
+          else
+            git checkout origin/main
+            echo "Repository updated. Checked out latest changes."
+          fi
       - run: |
             ls
+  carsus-build:
+    needs: [process-data-repo]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+         path: carsus/      
 
       - name: Setup carsus environment
         uses: conda-incubator/setup-miniconda@v2
@@ -81,7 +86,7 @@ jobs:
           ls
           cd carsus/
           ls
-          cd ../cloned-repo-carsus-data-nist
+          cd ../../cloned-repo-carsus-data-nist
           echo "cloned-repo-carsus-data-nist"
           ls
           
