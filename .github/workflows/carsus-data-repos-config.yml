@@ -20,7 +20,6 @@ jobs:
 
 
   process-data-repo:
-    needs: checkout
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -54,6 +53,8 @@ jobs:
             git checkout origin/main
             echo "Repository updated. Checked out latest changes."
           fi
+      - run: |
+            ls
   carsus-build:
     needs: [process-data-repo]
     runs-on: ubuntu-latest
