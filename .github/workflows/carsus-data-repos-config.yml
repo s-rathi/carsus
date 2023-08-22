@@ -21,20 +21,20 @@ jobs:
       - name: Restore cache
         uses: actions/cache@v3
         with:
-          path: cloned-repo-carsus-data-cmfgen
-          key: ${{ runner.os }}-cache-${{ hashFiles('cloned-repo-carsus-data-cmfgen/**/*.lock') }}
+          path: carsus-data-cmfgen
+          key: ${{ runner.os }}-cache-${{ hashFiles('carsus-data-cmfgen/**/*.lock') }}
 
       - name: Restore cache
         uses: actions/cache@v3
         with:
-          path: cloned-repo-carsus-data-kurucz
-          key: ${{ runner.os }}-cache-${{ hashFiles('cloned-repo-carsus-data-kurucz/**/*.lock') }}
+          path: carsus-data-kurucz
+          key: ${{ runner.os }}-cache-${{ hashFiles('ccarsus-data-kurucz/**/*.lock') }}
 
       - name: Restore cache
         uses: actions/cache@v3
         with:
-          path: cloned-repo-carsus-data-nist
-          key: ${{ runner.os }}-cache-${{ hashFiles('cloned-repo-carsus-data-nist/**/*.lock') }}
+          path: carsus-data-nist
+          key: ${{ runner.os }}-cache-${{ hashFiles('carsus-data-nist/**/*.lock') }}
 
 
       - run: |
@@ -42,7 +42,7 @@ jobs:
         
       - run: |
           for repo in carsus-data-cmfgen carsus-data-kurucz carsus-data-nist; do
-            repo_path="cloned-repo-$repo"
+            repo_path="$repo"
 
             if [ ! -d $repo_path ]] ; then
               echo "Cloning repository $repo..."
@@ -77,12 +77,12 @@ jobs:
       - run: |
           current_dir="${PWD}"
           echo "curent: $current_dir"
-          #cd cloned-repo-carsus-data-cmfgen/atomic/HYD/I
+          #cd carsus-data-cmfgen/atomic/HYD/I
           ls
           cd carsus/
           ls
-          cd ../cloned-repo-carsus-data-nist
-          echo "cloned-repo-carsus-data-nist"
+          cd ../cloned-repocarsus-data-nist
+          echo "carsus-data-nist"
           ls
           
       - name: Run notebooks
