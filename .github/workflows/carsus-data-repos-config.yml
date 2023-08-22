@@ -43,11 +43,10 @@ jobs:
       - run: |
           for repo in carsus-data-cmfgen carsus-data-kurucz carsus-data-nist; do
             repo_path="$repo"
-            echo "Checking for repository $repo_path..."
-
-            if [ ! -d $repo_path ]] ; then
+            echo "Checking for repository $repo_path..."        
+            if [ ! -d $repo_path ] ; then
               echo "Cloning repository $repo..."
-              git clone https://github.com/s-rathi/$repo $repo_path
+              git clone https://github.com/s-rathi/$repo $repo_path      #https://github.com/s-rathi/carsus-data-cmfgen
             fi
 
             # check for changes and update
