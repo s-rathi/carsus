@@ -81,9 +81,9 @@ jobs:
           ls
           cd carsus/
           ls
-          cd ../cloned-repocarsus-data-nist
-          echo "carsus-data-nist"
-          ls
+          #cd ../../carsus-data-nist
+          #echo "carsus-data-nist"
+          #ls
           
       - name: Run notebooks
         run: |
