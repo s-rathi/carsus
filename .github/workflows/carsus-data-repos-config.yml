@@ -51,6 +51,7 @@ jobs:
               cd $repo_path
               git fetch
               git checkout origin/main
+              cd ..
             fi
           done
       - run: |
