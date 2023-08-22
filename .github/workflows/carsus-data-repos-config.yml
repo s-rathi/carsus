@@ -47,16 +47,14 @@ jobs:
             if [ ! -d $repo_path ] ; then
               echo "Cloning repository $repo..."
               git clone https://github.com/s-rathi/$repo $repo_path      #https://github.com/s-rathi/carsus-data-cmfgen
-            fi
-
-            # check for changes and update
-            cd $repo_path
-            git fetch
-            if git diff origin/main --exit-code; then
-              echo "No changes found for $repo. Using existing clone."
-            else
+            else                                # check for changes and update
+              cd $repo_path
+              git fetch
+            #if git diff origin/main --exit-code; then
+             # echo "No changes found for $repo. Using existing clone."
+            #else
               git checkout origin/main
-              echo "Repository $repo updated. Checked out latest changes."
+             # echo "Repository $repo updated. Checked out latest changes."
             fi
           done
       - run: |
